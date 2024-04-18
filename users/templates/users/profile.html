@@ -16,8 +16,10 @@
                 <h3 class="text-center">Почта - {{ profile.user.email }}</h3>
                 <ul class="list-unstyled mt-3 mb-4">
                     <div class="text-center">
+                        {% if profile.first_name and profile.last_name %}
                         <li><h4>Имя: <small class="text-muted">{{ profile.first_name }}</small></h4></li>
                         <li><h4>Фамилия: <small class="text-muted">{{ profile.last_name }}</small></h4></li>
+                        {% endif %}
                         {% if profile.gender != 'unknown' %}
                         <li><h4>Пол: <small class="text-muted">{{ profile.get_gender_display }}</small></h4></li>
                         {% endif %}
@@ -34,6 +36,14 @@
                 {% if request.user == profile.user %}
                 <hr>
                 <a href="{% url 'users:profile_change' profile.slug %}" class="w-100 btn btn-lg btn-primary">Редактировать</a>
+                <br><br>
+                <div class="d-flex justify-content-center">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a class="btn btn-warning" href="{% url 'users:password_change' %}">Сменить
+                            Пароль</a>
+                        <a class="btn btn-outline-danger" href="#">Удалить Профиль</a>
+                    </div>
+                </div>
                 {% endif %}
             </div>
         </div>
