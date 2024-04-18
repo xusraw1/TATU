@@ -57,4 +57,4 @@ class LogoutProfile(View):
     def get(self, request):
         logout(request)
         messages.success(request, 'Вы вышли из своей учетной записи.')
-        return redirect('login')
+        return redirect('users:login')

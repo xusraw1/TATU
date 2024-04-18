@@ -1,28 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Вход</title>
-</head>
-<body>
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Вход в Учетную Запись
+{% endblock %}
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li>
-        {{ message }}
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
+{% block content %}
 
+<div class="py-3 text-center">
+    <h2>Вход</h2>
+</div>
 
-<h1>Вход в учетную запись</h1>
-<hr>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Войти</button>
-</form>
-</body>
-</html>
+<div class="d-flex justify-content-center"> <!-- Добавляем классы для центрирования -->
+    <form method="post" class="col-sm-7">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success">Войти</button>
+        </div>
+        <hr>
+        <p class="text-center"><b>У вас нет учетной записи? <a class="link-outline-primary"
+                                                               style="text-decoration: none"
+                                                               href="{% url 'users:register' %}">Создайте</a></b>
+        </p>
+    </form>
+</div>
+
+{% endblock %}

@@ -12,10 +12,15 @@
 
 {% include 'main/header.html' %}
 
-{% block content %}
+<div class="container">
+    <br>
+    {% include 'main/messages.html' %}
 
-{% endblock %}
+    {% block content %}
 
+    {% endblock %}
+
+</div>
 {% include 'main/footer.html' %}
 <!-- Bootstrap JS -->
 
