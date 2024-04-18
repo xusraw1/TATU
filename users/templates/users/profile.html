@@ -41,7 +41,45 @@
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <a class="btn btn-warning" href="{% url 'users:password_change' %}">Сменить
                             Пароль</a>
-                        <a class="btn btn-outline-danger" href="#">Удалить Профиль</a>
+                        <button class="btn btn-outline-danger" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                            Деактивировать
+                        </button>
+
+                        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
+                             aria-labelledby="offcanvasExampleLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Деактивировать Профиль</h5>
+                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <div>
+                                    <div class="alert alert-warning" role="alert">
+                                        <h4 class="alert-heading">ПРОЧТИТЕ ВНИМАТЕЛЬНО!</h4>
+                                        <p>После удаления профиля, вы не
+                                            сможете получить доступ к профилю! Хотите ли вы удалить его?</p>
+                                        <hr>
+                                        <p class="mb-0">Если вы уверенны деактивировать свой аккаунт, вы можете нажимать
+                                            кнопку УДАЛИТЬ</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <a class="btn btn-outline-danger"
+                                       href="{% url 'users:profile_deactivate' profile.slug %}">Да,
+                                        Деактивировать</a>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-center">
+                                    <div class="d-grid gap-4 col-6 mx-auto">
+                                        <button type="button" class="btn btn-outline-primary"
+                                                data-bs-dismiss="offcanvas"
+                                                aria-label="Close">Назад
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {% endif %}

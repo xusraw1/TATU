@@ -18,10 +18,12 @@
             <button type="submit" class="btn btn-success">Войти</button>
         </div>
         <hr>
-        <p class="text-center"><b>У вас нет учетной записи? <a class="link-outline-primary"
+        <p class="text-center"><b>У вас нет учетной записи? <a class="link-primary"
                                                                style="text-decoration: none"
                                                                href="{% url 'users:register' %}">Создайте</a></b>
         </p>
+        <p class="text-center"><a href="{% url 'users:profile_activate' %}" class="link-secondary">Активировать
+            Профиль</a></p>
     </form>
 </div>
 

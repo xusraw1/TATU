@@ -17,9 +17,9 @@ class CreateUserForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField()
-    username = forms.CharField(max_length=150)
-    password = forms.CharField(widget=forms.PasswordInput())
+    email = forms.EmailField(label='Эмайл')
+    username = forms.CharField(max_length=150, label='Никнейм')
+    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
 
 
 class ProfileChangeForm(forms.ModelForm):
@@ -27,3 +27,7 @@ class ProfileChangeForm(forms.ModelForm):
         model = Profile
         fields = ['first_name', 'last_name', 'gender']
 
+
+class ProfileActivateForm(forms.Form):
+    username = forms.CharField(max_length=150, label='Никнейм')
+    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
