@@ -51,3 +51,10 @@ class LoginProfileView(View):
             return redirect('login')
         messages.error(request, 'Форма заполнено неправильно.')
         return redirect('login')
+
+
+class LogoutProfile(View):
+    def get(self, request):
+        logout(request)
+        messages.success(request, 'Вы вышли из своей учетной записи.')
+        return redirect('login')
