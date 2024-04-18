@@ -1,0 +1,28 @@
+<header class="p-2 bg-warning text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="#" class="nav-link px-2 text-primary"><b>Главная</b></a></li>
+                <li><a href="#" class="nav-link px-2 text-dark"><b>Сервисы</b></a></li>
+                <li><a href="#" class="nav-link px-2 text-dark"><b>Контакты</b></a></li>
+                <li><a href="#" class="nav-link px-2 text-dark"><b>О проекте</b></a></li>
+            </ul>
+
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                <input type="search" class="form-control form-control-dark" placeholder="Поиск..." aria-label="Search">
+            </form>
+
+            {% if request.user.is_authenticated %}
+            <div>
+                <a href="/" class="btn btn-secondary">Профиль</a>
+                <a href="{% url 'users:login' %}" class="btn btn-outline-danger">Выход</a>
+            </div>
+            {% else %}
+            <div class="btn-group" role="group">
+                <a href="{% url 'users:login' %}" class="btn btn-success">Войти</a>
+                <a href="{% url 'users:register' %}" class="btn btn-outline-primary">Регистрация</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</header>

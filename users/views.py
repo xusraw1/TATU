@@ -12,7 +12,7 @@ class CreateProfileView(CreateView):
     model = Profile
     template_name = 'users/create_profile.html'
     form_class = CreateUserForm
-    success_url = reverse_lazy('register')
+    success_url = reverse_lazy('main:index')
 
     def form_valid(self, form):
         email = form.cleaned_data['email']
@@ -46,11 +46,11 @@ class LoginProfileView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Вы успешно вошли в свою учетную запись.')
-                return redirect('login')
+                return redirect('main:index')
             messages.warning(request, 'Пользователь не найден. Попробуйте войти заново.')
-            return redirect('login')
+            return redirect('users:login')
         messages.error(request, 'Форма заполнено неправильно.')
-        return redirect('login')
+        return redirect('users:login')
 
 
 class LogoutProfile(View):
