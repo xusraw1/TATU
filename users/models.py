@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .utils import get_random_symbols
+from django.urls import reverse
 
 
 class Profile(models.Model):
@@ -32,6 +33,9 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.username} + {self.email}"
+
+    def get_absolute_url(self):
+        return reverse('users:profile', kwargs={'slug': self.slug})
 
     class Meta:
         ordering = ['-created']

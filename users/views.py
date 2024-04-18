@@ -8,6 +8,12 @@ from django.views import View
 from django.contrib.auth import login, authenticate, logout
 
 
+class ProfileView(View):
+    def get(self, request, slug):
+        profile = Profile.objects.get(slug=slug)
+        return render(request, 'users/profile.html', {'profile': profile})
+
+
 class CreateProfileView(CreateView):
     model = Profile
     template_name = 'users/create_profile.html'
@@ -56,5 +62,5 @@ class LoginProfileView(View):
 class LogoutProfile(View):
     def get(self, request):
         logout(request)
-        messages.success(request, 'Вы вышли из своей учетной записи.')
+        messages.info(request, 'Вы вышли из своей учетной записи.')
         return redirect('users:login')

@@ -14,7 +14,7 @@
 
             {% if request.user.is_authenticated %}
             <div>
-                <a href="/" class="btn btn-secondary">Профиль</a>
+                <a href="{% url 'users:profile' request.user.profile.slug %}" class="btn btn-secondary">Профиль</a>
                 <a href="{% url 'users:logout' %}" class="btn btn-outline-danger">Выход</a>
             </div>
             {% else %}
