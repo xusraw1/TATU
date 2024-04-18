@@ -3,17 +3,19 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from .utils import get_random_symbols
 
 
 class Profile(models.Model):
     GENDER = [
         ('man', 'Мужчина'),
-        ('woman', 'Женщина')
+        ('woman', 'Женщина'),
+        ('unknown', 'Неизвестно'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=150, null=True, blank=True, unique=True)
     email = models.EmailField(unique=True)
-    gender = models.CharField(max_length=5, choices=GENDER, default='Неизвестно', verbose_name='Пол')
+    gender = models.CharField(max_length=10, choices=GENDER, default='unknown', verbose_name='Пол')
     first_name = models.CharField(max_length=50, null=True, blank=True, verbose_name='Имя')
     last_name = models.CharField(max_length=50, null=True, blank=True, verbose_name='Фамилия')
 
@@ -25,7 +27,7 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(str(self.username) + str(self.id))
+            self.slug = slugify(str(self.username) + str(get_random_symbols()))
         super().save(*args, **kwargs)
 
     def __str__(self):

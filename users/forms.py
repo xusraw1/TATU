@@ -13,3 +13,9 @@ class CreateUserForm(UserCreationForm):
         if len(username) >= 150:
             raise ValidationError("Имя пользователя не должно превышать 150 символов.")
         return username
+
+
+class LoginForm(forms.Form):
+    email = forms.EmailField()
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(widget=forms.PasswordInput())
