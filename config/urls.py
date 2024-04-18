@@ -6,4 +6,7 @@ urlpatterns = [
 
     # users
     path('user/', include('users.urls')),
+
+    # main
+    path('', include('main.urls')),
 ]

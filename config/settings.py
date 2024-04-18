@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     #  созданные приложения
     'users',
+    'main',
 ]
 
 MIDDLEWARE = [
