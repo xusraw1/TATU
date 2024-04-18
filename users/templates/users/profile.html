@@ -16,8 +16,8 @@
                 <h3 class="text-center">Почта - {{ profile.user.email }}</h3>
                 <ul class="list-unstyled mt-3 mb-4">
                     <div class="text-center">
-                        <li><h4>Имя: <small class="text-muted">Xusrav</small></h4></li>
-                        <li><h4>Фамилия: <small class="text-muted">Махмаджанов</small></h4></li>
+                        <li><h4>Имя: <small class="text-muted">{{ profile.first_name }}</small></h4></li>
+                        <li><h4>Фамилия: <small class="text-muted">{{ profile.last_name }}</small></h4></li>
                         {% if profile.gender != 'unknown' %}
                         <li><h4>Пол: <small class="text-muted">{{ profile.get_gender_display }}</small></h4></li>
                         {% endif %}
@@ -27,13 +27,13 @@
                     <li><h5>Созданно: <small class="text-muted">{{ profile.created }} | {{ profile.created|timesince }}
                         назад</small></h5></li>
                     {% if request.user == profile.user %}
-                    <li><h5>Обновленно: <small class="text-muted">{{ profile.updated }} | {{ profile.created|timesince }}
+                    <li><h5>Обновленно: <small class="text-muted">{{ profile.updated }} | {{ profile.updated|timesince }}
                         назад</small></h5></li>
                     {% endif %}
                 </ul>
                 {% if request.user == profile.user %}
                 <hr>
-                <a href="#" class="w-100 btn btn-lg btn-primary">Редактировать</a>
+                <a href="{% url 'users:profile_change' profile.slug %}" class="w-100 btn btn-lg btn-primary">Редактировать</a>
                 {% endif %}
             </div>
         </div>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
-from .forms import CreateUserForm, LoginForm
+from .forms import CreateUserForm, LoginForm, ProfileChangeForm
 from .models import Profile
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -10,8 +10,35 @@ from django.contrib.auth import login, authenticate, logout
 
 class ProfileView(View):
     def get(self, request, slug):
-        profile = Profile.objects.get(slug=slug)
+        try:
+            profile = Profile.objects.get(slug=slug)
+        except Profile.DoesNotExist as e:
+            messages.error(request, 'Профиль не найден!')
+            return redirect('main:index')
         return render(request, 'users/profile.html', {'profile': profile})
+
+
+class ProfileChangeView(View):
+    def get(self, request, slug):
+        try:
+            profile = Profile.objects.get(slug=slug)
+        except Profile.DoesNotExist as e:
+            messages.error(request, 'Профиль не найден!')
+            return redirect('main:index')
+        form = ProfileChangeForm(instance=profile)
+        return render(request, 'users/change_profile.html', {'form': form, 'profile': profile})
+
+    def post(self, request, slug):
+        profile = Profile.objects.get(slug=slug)
+        form = ProfileChangeForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save(commit=False)
+            form.instance.user = profile.user  # Устанавливаем user для instance формы
+            form.save()
+            messages.success(request, 'Профиль успешно изменен.')
+            return redirect('users:profile', profile.slug)
+        messages.error(request, 'Не удалось обновить профиль. Попробуйте ввести корректные данные!')
+        return render(request, 'users/change_profile.html', {'form': form, 'profile': profile})
 
 
 class CreateProfileView(CreateView):

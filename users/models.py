@@ -16,12 +16,13 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=150, null=True, blank=True, unique=True)
     email = models.EmailField(unique=True)
+
     gender = models.CharField(max_length=10, choices=GENDER, default='unknown', verbose_name='Пол')
     first_name = models.CharField(max_length=50, null=True, blank=True, verbose_name='Имя')
     last_name = models.CharField(max_length=50, null=True, blank=True, verbose_name='Фамилия')
 
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name='Дата создания профиля')
-    updated = models.DateTimeField(auto_now_add=True, blank=True, null=True,
+    updated = models.DateTimeField(auto_now=True, blank=True, null=True,
                                    verbose_name='Дата последнего обновления профиля')
 
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -35,7 +36,7 @@ class Profile(models.Model):
         return f"{self.username} + {self.email}"
 
     def get_absolute_url(self):
-        return reverse('users:profile', kwargs={'slug': self.slug})
+        return reverse('users:profile', args=[str(self.slug)])
 
     class Meta:
         ordering = ['-created']
