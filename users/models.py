@@ -33,7 +33,7 @@ class Profile(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.username} + {self.email}"
+        return f"{self.username}"
 
     def get_absolute_url(self):
         return reverse('users:profile', args=[str(self.slug)])
