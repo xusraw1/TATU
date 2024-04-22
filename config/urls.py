@@ -9,4 +9,7 @@ urlpatterns = [
 
     # main
     path('', include('main.urls')),
+
+    # services
+    path('services/', include('services.urls')),
 ]
