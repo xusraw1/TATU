@@ -8,6 +8,7 @@ from django.contrib import messages
 
 
 class PasswordView(View):
+
     def get(self, request, slug):
         profile = get_object_or_404(Profile, slug=slug)
         passwords = Password.objects.filter(profile=profile).order_by('-id')
@@ -16,6 +17,8 @@ class PasswordView(View):
             'passwords': passwords,
         }
         return render(request, 'services/password_list.html', context)
+
+        # нужно добавить к представления генерации паролей несколько фич, оценка пароля и какие символы есть
 
     def post(self, request, slug):
         range = request.POST.get('range')
