@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+Сервисы
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Сервисы</h1>
+<br>
+<div class="col-lg-4 col-xxl-3 mb-2">
+    <div class="card bg-light border-3 h-50">
+        <div class="card-body text-center p-2 p-lg-2 pt-0 pt-lg-0">
+            <br>
+            <a href="{% url 'passwords' %}" class="btn btn-outline-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                     class="bi bi-asterisk" viewBox="0 0 16 16">
+                    <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1"></path>
+                </svg>
+            </a>
+            <h2 class="fs-2 fw-light"><a href="{% url 'passwords' %}"
+                                         style="text-decoration: navajowhite">Генератор паролей</a></h2>
+            <p class="mb-1 fw-bold">Создавайте надежные пароли и контролируйте их как вам удобно!</p>
+        </div>
+    </div>
+    {% endblock %}

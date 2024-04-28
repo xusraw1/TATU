@@ -5,10 +5,10 @@ from .models import Password
 from .utils import generate_password
 from django.http import HttpResponse
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class PasswordView(View):
-
+class PasswordViewProfile(LoginRequiredMixin, View):
     def get(self, request, slug):
         profile = get_object_or_404(Profile, slug=slug)
         passwords = Password.objects.filter(profile=profile).order_by('-id')
@@ -16,7 +16,7 @@ class PasswordView(View):
             'profile': profile,
             'passwords': passwords,
         }
-        return render(request, 'services/password_list.html', context)
+        return render(request, 'services/password_list_profile.html', context)
 
         # нужно добавить к представления генерации паролей несколько фич, оценка пароля и какие символы есть
 
@@ -37,6 +37,15 @@ class PasswordView(View):
         return redirect('password_list', slug)
 
 
+class PasswordView(View):
+    def get(self, request):
+        top = Password.objects.all().order_by('-id')[:10]
+        context = {
+            'passwords': top
+        }
+        return render(request, 'services/password_list.html', context)
+
+
 def delete_password(request, id):
     slug = None
     password = Password.objects.get(id=id)
@@ -44,3 +53,7 @@ def delete_password(request, id):
     password.delete()
     messages.error(request, 'Пароль удален.')
     return redirect('password_list', slug)
+
+
+def services(request):
+    return render(request, 'services/services.html')
