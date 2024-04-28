@@ -7,19 +7,25 @@ from django.contrib import messages
 from django.views import View
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request, slug):
         try:
             profile = Profile.objects.get(slug=slug)
+            if request.user == profile.user:
+                pass
+            else:
+                messages.warning(request, 'Вы не являетесь владельцем этого аккаунта, если это ваш аккаунт то войдите!')
+                return redirect('users:logout')
         except Profile.DoesNotExist as e:
             messages.error(request, 'Профиль не найден!')
             return redirect('main:index')
         return render(request, 'users/profile.html', {'profile': profile})
 
 
-class ProfileDeactivate(View):
+class ProfileDeactivate(LoginRequiredMixin, View):
     def get(self, request, slug):
         try:
             profile = Profile.objects.get(slug=slug)
@@ -70,10 +76,13 @@ class ProfileActivate(View):
             return redirect('users:profile_activate')
 
 
-class ProfileChangeView(View):
+class ProfileChangeView(LoginRequiredMixin, View):
     def get(self, request, slug):
         try:
             profile = Profile.objects.get(slug=slug)
+            if not request.user == profile.user:
+                messages.error(request, 'У вас нет прав для изменений чужих профилей.')
+                return redirect('main:index')
         except Profile.DoesNotExist as e:
             messages.error(request, 'Профиль не найден!')
             return redirect('main:index')
@@ -101,7 +110,6 @@ class CreateProfileView(CreateView):
 
     def form_valid(self, form):
         email = form.cleaned_data['email']
-
         if Profile.objects.filter(email=email).exists():
             messages.error(self.request, 'Пользователь с таким email уже существует.')
             return self.form_invalid(form)
@@ -114,6 +122,9 @@ class CreateProfileView(CreateView):
 
 class LoginProfileView(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            messages.info(self.request, 'Для того чтобы войти в другой профиль вам необходимо выйти из текущего')
+            return redirect('/')
         form = LoginForm()
         return render(request, 'users/login_profile.html', {'form': form})
 
@@ -134,7 +145,7 @@ class LoginProfileView(View):
         return redirect('users:login')
 
 
-class LogoutProfile(View):
+class LogoutProfile(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         messages.info(request, 'Вы вышли из своей учетной записи.')

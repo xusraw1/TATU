@@ -49,6 +49,9 @@ class PasswordView(View):
 def delete_password(request, id):
     slug = None
     password = Password.objects.get(id=id)
+    if not request.user == password.profile.user:
+        messages.error(request, 'Вы не являетесь создателем этого пароля!')
+        return redirect('passwords')
     slug = password.profile.slug
     password.delete()
     messages.error(request, 'Пароль удален.')
