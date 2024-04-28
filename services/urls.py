@@ -7,5 +7,7 @@ urlpatterns = [
     path('password/list/<slug:slug>/', PasswordViewProfile.as_view(), name='password_list'),
     path('password/delete/<int:id>/', delete_password, name='password_delete'),
 
+    path('weather/', Weather.as_view(), name='weather'),
+
     path('', services, name='services'),
 ]
