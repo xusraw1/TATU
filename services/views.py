@@ -1,13 +1,60 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from users.models import Profile
-from .models import Password
+from .models import Password, Blog
 from .utils import generate_password, get_text, get_parametrs, get_week
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 import requests
 from datetime import datetime
+from .forms import *
+
+
+class CreateBlogView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = CreateBlogForm()
+        return render(request, 'services/create_blog.html', {'form': form})
+
+    def post(self, request):
+        profile = Profile.objects.get(user=request.user)
+        form = CreateBlogForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            blog = form.save(commit=False)
+            blog.profile = profile
+            blog.save()
+            messages.success(request, 'Пост успешно создан!')
+            return redirect('/')
+        else:
+            messages.error(request, 'Форма заполнена неправильно!')
+            return redirect('create_blog')
+
+
+class Blogs(View):
+    def get(self, request):
+        blogs = Blog.objects.all().filter(status=True)
+        return render(request, 'services/blogs.html', {'blogs': blogs})
+
+
+class BlogDetailView(View):
+    def get(self, request, id):
+        form = CreateCommentForm()
+        blog = get_object_or_404(Blog, id=id)
+        return render(request, 'services/blog.html', {'blog': blog, 'form': form})
+
+    def post(self, request, id):
+        form = CreateCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            blog = get_object_or_404(Blog, id=id)
+            profile = get_object_or_404(Profile, user=request.user)
+            comment.blog = blog
+            comment.profile = profile
+            comment.save()
+            messages.success(request, 'Комментарии успешно создано!')
+            return redirect('blog', id)
+        messages.error(request, 'Произошла ошибка при заполнении формы комментария!')
+        return redirect('blog', id)
 
 
 class Weather(View):

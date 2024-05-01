@@ -12,3 +12,7 @@ class PasswordAdmin(admin.ModelAdmin):
 class BlogAdmin(admin.ModelAdmin):
     list_display = ['profile', 'created', 'status']
     search_filters = ['title', 'body']
+
+
+admin.site.register(Tag)
+admin.site.register(Comment)

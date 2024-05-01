@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+<script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+{{ block.super }}
+{% endblock %}
+
+{% block title %}
+Создать пост
+{% endblock %}
+
+{% block content %}
+<div class="justify-content-center">
+    <div class="form-control">
+        <h2 class="text-center text-primary fw-bold">Создание поста</h2>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.media }}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-outline-success">Создать</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
