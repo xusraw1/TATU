@@ -14,12 +14,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 class CreateBlogView(LoginRequiredMixin, View):
     def get(self, request):
-        form = CreateBlogForm()
+        form = CreateUpdateBlogForm()
         return render(request, 'services/create_blog.html', {'form': form})
 
     def post(self, request):
         profile = Profile.objects.get(user=request.user)
-        form = CreateBlogForm(data=request.POST, files=request.FILES)
+        form = CreateUpdateBlogForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             blog = form.save(commit=False)
             blog.profile = profile
@@ -33,9 +33,9 @@ class CreateBlogView(LoginRequiredMixin, View):
 
 class Blogs(View):
     def get(self, request):
-        form = CreateBlogForm()
+        form = CreateUpdateBlogForm()
         blogs = Blog.objects.all().filter(status=True)
-        p = Paginator(blogs, 15)
+        p = Paginator(blogs, 10)
         page_number = request.GET.get('page')
         try:
             page_obj = p.get_page(page_number)
@@ -47,7 +47,7 @@ class Blogs(View):
 
     def post(self, request):
         profile = Profile.objects.get(user=request.user)
-        form = CreateBlogForm(data=request.POST, files=request.FILES)
+        form = CreateUpdateBlogForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             blog = form.save(commit=False)
             blog.profile = profile
@@ -78,6 +78,30 @@ class BlogDetailView(View):
             return redirect('blog', id)
         messages.error(request, 'Произошла ошибка при заполнении формы комментария!')
         return redirect('blog', id)
+
+
+class BlogUpdateView(View):
+    def get(self, request, id):
+        blog = get_object_or_404(Blog, id=id)
+        if request.user.profile == blog.profile:
+            form = CreateUpdateBlogForm(instance=blog)
+            return render(request, 'services/edit_blog.html', {'form': form, 'blog': blog})
+        else:
+            messages.error(request, 'У вас нет прав доступа для изменения текущего поста!')
+            return redirect('blogs')
+
+    def post(self, request, id):
+        blog = get_object_or_404(Blog, id=id)
+        form = CreateUpdateBlogForm(data=request.POST, files=request.FILES, instance=blog)
+        if form.is_valid():
+            blog = form.save(commit=False)
+            profile = get_object_or_404(Profile, user=request.user)
+            blog.profile = profile
+            blog.save()
+            messages.success(request, 'Блог успешно редактирован.')
+            return redirect('blog', id)
+        messages.info(request, 'Возникли проблемы при редактировании блога!')
+        return redirect('update_blog', id)
 
 
 class Weather(View):

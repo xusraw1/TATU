@@ -5,6 +5,7 @@ urlpatterns = [
     path('create/blog/', CreateBlogView.as_view(), name='create_blog'),
     path('blogs/', Blogs.as_view(), name='blogs'),
     path('blog/<int:id>/', BlogDetailView.as_view(), name='blog'),
+    path('blog/<int:id>/update/', BlogUpdateView.as_view(), name='update_blog'),
 
     path('passwords/', PasswordView.as_view(), name='passwords'),
 
