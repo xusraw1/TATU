@@ -1,16 +1,52 @@
 {% extends 'main/base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}
 Посты
 {% endblock %}
 
 {% block content %}
 <div class="justify-content-center">
-    <h1 class="text-center">Все посты сайта</h1>
+    <h1 class="text-center">Все посты</h1>
+
+
+    <!-- Button trigger modal -->
+    <div class="justify-content-center text-center">
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Создать краткий пост
+            </button>
+            <a href="{% url 'create_blog' %}" class="btn btn-outline-primary">Создать большой пост</a>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Создайте свой собственный пост</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{ form.media }}
+                        {{ form|crispy }}
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-primary">Создать</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="album py-5">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                {% for blog in blogs %}
+                {% for blog in page_obj %}
                 <div class="col">
                     <div class="card shadow-sm">
                         <img src="{{ blog.image.url }}" alt="Title" width="100%" height="300">
@@ -19,8 +55,9 @@
                             <p class="card-text">{{ blog.title|truncatewords:5 }}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-danger">Просмотреть</button>
-                                    <button type="button" class="btn btn-sm btn-warning">Изменить</button>
+                                    <a href="{% url 'blog' blog.id %}"
+                                       class="btn btn-sm btn-outline-danger">Просмотреть</a>
+                                    <a href="#" class="btn btn-sm btn-warning">Изменить</a>
                                 </div>
                                 <small class="text-muted">{{ blog.created|timesince }} назад</small>
                             </div>
@@ -29,7 +66,78 @@
                 </div>
                 {% endfor %}
             </div>
+            <br>
+            <center>
+                <div class="pagination-container">
+                    {% if page_obj.paginator.num_pages > 1 %}
+                    <a href="?page=1" style="text-decoration: none">
+        <span class="badge bg-danger">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                 class="bi bi-chevron-double-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd"
+        d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+  <path fill-rule="evenodd"
+        d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+</svg>
+        </span>
+                    </a>
+                    {% endif %}
+
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{page_obj.previous_page_number}}" style="text-decoration: none">
+        <span class="badge bg-danger">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                 class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+            </svg>
+        </span>
+                    </a>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                    <span class="badge bg-danger" style="text-decoration: none; font-size: 14px"><b>{{ num }}</b></span>
+                    {% else %}
+                    <a href="?page={{ num }}" class="badge bg-secondary me-1"
+                       style="font-size: 14px; background-color: transparent; color: #ffffff; border-color: transparent; text-decoration: none">{{ num }}</a>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{page_obj.next_page_number}}" style="text-decoration: none">
+        <span class="badge bg-danger">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                 class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+            </svg>
+        </span>
+                    </a>
+                    {% endif %}
+                    {% if page_obj.paginator.num_pages > 1 %}
+                    <a href="?page={{ page_obj.paginator.num_pages }}">
+                    <span class="badge bg-danger">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                         class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708"/>
+                        <path fill-rule="evenodd"
+                              d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                    </span>
+                    </a>
+                    {% endif %}
+                </div>
+            </center>
         </div>
     </div>
 </div>
+
+<style>
+    .pagination-container {
+        max-width: 500px;
+        border-radius: 50px;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+</style>
 {% endblock %}

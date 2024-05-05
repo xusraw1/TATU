@@ -21,6 +21,7 @@
             {{ form.media }}
             {{ form|crispy }}
             <button type="submit" class="btn btn-outline-success">Создать</button>
+            <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary">Назад</a>
         </form>
     </div>
 </div>

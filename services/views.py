@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import requests
 from datetime import datetime
 from .forms import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class CreateBlogView(LoginRequiredMixin, View):
@@ -32,8 +33,30 @@ class CreateBlogView(LoginRequiredMixin, View):
 
 class Blogs(View):
     def get(self, request):
+        form = CreateBlogForm()
         blogs = Blog.objects.all().filter(status=True)
-        return render(request, 'services/blogs.html', {'blogs': blogs})
+        p = Paginator(blogs, 15)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = p.get_page(page_number)
+        except PageNotAnInteger:
+            page_obj = p.page(1)
+        except EmptyPage:
+            page_obj = p.page(p.num_pages)
+        return render(request, 'services/blogs.html', {'form': form, "page_obj": page_obj})
+
+    def post(self, request):
+        profile = Profile.objects.get(user=request.user)
+        form = CreateBlogForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            blog = form.save(commit=False)
+            blog.profile = profile
+            blog.save()
+            messages.success(request, 'Пост успешно создан!')
+            return redirect('/')
+        else:
+            messages.error(request, 'Форма заполнена неправильно!')
+            return redirect('blogs')
 
 
 class BlogDetailView(View):
