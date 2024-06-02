@@ -22,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h%u2id+8br)$506n7-^%9!-4qd081%frb^(p^ab-ely=ur_=v$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -90,12 +90,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+import dj_database_url
+
+DATABASE_URL = "postgres://tatudb_user:6wnyyHK0q5iikglBF0CcQR4Q4CHU1GIX@dpg-cpe42cdds78s73eq2ong-a.oregon-postgres.render.com/tatudb"
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(DATABASE_URL)
 }
 
 # Password validation
